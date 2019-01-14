@@ -1,0 +1,100 @@
+<div class="container">
+  <div class="row">
+    <form [formGroup]="formData" (ngSubmit)="save()">
+      <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+        <article class="my-form">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-title">
+              <div class="page-header">
+                <h1>TibaMe學習網</h1>
+                <small>台北商業大學免費名額登記</small>
+              </div>
+              <p>TibaMe學習網提供台北商業大學之在校生或應屆畢業生(註1)，參加「實體增能」課程(註2)，每班至多開放3位免費名額(註3)。</p>
+              <p>請依以下流程報名：</p>
+              <ol>
+                <li>至TibaMe學習網註冊成為會員（直接點我進入<a target="_blank" rel="noopener noreferrer" href="http://www.tibame.com">http://www.tibame.com</a>）</li>
+                <li>填寫完此表</li>
+              </ol>
+              <div>若有任何問題，歡迎聯繫以下服務窗口</div>
+              <div>謝小姐 Una / <a href="mailto:Una_Hsieh@wiedu.com">Una_Hsieh@wiedu.com</a></div>
+
+              <p>備註：</p>
+              <ol>
+                <li>報名時請使用 ntub.edu.tw 的電子郵件作為佐證。</li>
+                <li>應屆畢業生，以畢業一年內者為限，超過者不在此限</li>
+                <li>僅限於TibaMe在『台北商業大學(校本部)』開設的短期課程與梯次</li>
+                <li>報名後需經TibaMe審核，將綜合考量填表優先順序及歷史參訓紀錄</li>
+                <li>開課前三天才會寄發開課通知，收到開課通知方可免費參加課程</li>
+              </ol>
+              <a [routerLink]="['/private-policy']">
+                隱私權政策
+              </a>
+              <p></p>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-8">
+            <div class="form-main">
+              <div class="form-group">
+                <label for="email" class="label-title">您的信箱 <small>(必填)</small></label>
+                <input type="email" id="email" [value]="email" (input)="onEmailChange($event.target.value)" placeholder="請輸入包含@ntub.edu.tw的信箱資訊" class="form-control" formControlName="email">
+              </div>
+              <div class="form-group">
+                  <label for="stdNo" class="label-title">學號 <small>(必填)</small></label>
+                  <input type="text" [value]="stdNo" formControlName="stdNo" id="stdNo" placeholder="請輸入您的學號" class="form-control" />
+                </div>
+              <div class="form-group">
+                <label for="name" class="label-title">您的姓名 <small>(必填)</small></label>
+                <input type="text" formControlName="name" placeholder="請輸入您的姓名" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label for="phone" class="label-title">聯絡電話 <small>(必填)</small></label>
+                <input type="tel" formControlName="phone" id="phone" placeholder="請輸入您的聯絡電話" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label for="depart" class="label-title">科系/所 <small>(必填)</small></label>
+                <select name="" id="depart" class="form-control" formControlName="depart">
+                    <option *ngFor="let item of departments" value="{{item.unit}}">{{ item.unit}}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <div class="label-title">
+                  身份 <small>(必填)</small>
+                </div>
+                <div class="radio-group" *ngFor="let radio of radioOptions">
+                  <label class="radio-inline">
+                    <input type="radio" name="id" formControlName="id" value="{{radio}}" (click)="keyOther(radio)">
+                    <span class="check-span">
+                      <i class="glyphicon glyphicon-ok"></i>
+                    </span>
+                    {{radio}}
+                    <div *ngIf="radio === '其他' && isInputOther" style="display:inline-block">
+                      <input type="text" name="" id="birthday-date" class="form-control" formControlName="other" style="height:20px">
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                  <label for="select_class" class="label-title">欲報名之課程名稱 <small>(必填)</small></label>
+                  <select  (change)="setClass($event.target.value)" name="" id="select_class" class="form-control" formControlName="select_class">
+                      <option *ngFor="let item of tibameClass" value="{{item.title}}">{{ item.title}}</option>
+                  </select>
+                </div>
+              <div class="form-group user-birthday" *ngIf="selectedClass">
+                <div class="label-title">課程開課梯次</div>
+                <div class="form-inline">
+                  <div class="form-group">
+                    <div class="well">日期 {{ selectedClass.time}}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="buttons text-center">
+                  <input type="submit" value="送出" class="btn btn-danger btn-lg">
+                  <input type="reset" value="取消" class="btn btn-default btn-lg">
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </form>
+  </div>
+</div>

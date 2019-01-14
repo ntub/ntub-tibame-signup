@@ -1,0 +1,37 @@
+html,body{
+  height: 100%;
+}
+body{
+  display: flex;
+}
+
+.form-title{
+  padding-top: 2.8em;
+  margin: auto 15px;
+}
+.form-title small{
+  font-size: 16px;
+}
+.form-title p{
+  font-size: 15px;
+  line-height: 1.8;
+}
+.container{
+  margin: auto;
+}
+
+p {
+  font-family: Lato;
+}
+
+ol > li {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-weight: 800;
+  margin-bottom: 10px;
+
+  ol > li {
+    font-weight: 400;
+    margin-bottom: 5px;
+  }
+}
