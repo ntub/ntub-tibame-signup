@@ -36,12 +36,9 @@
             <div class="form-main">
               <div class="form-group">
                 <label for="email" class="label-title">您的信箱 <small>(必填)</small></label>
-                <input type="email" id="email" [value]="email" (input)="onEmailChange($event.target.value)" placeholder="請輸入包含@ntub.edu.tw的信箱資訊" class="form-control" formControlName="email">
+                <input type="email" id="email" [value]="email" (input)="onEmailChange($event.target.value)" placeholder="請輸入包含@ntub.edu.tw的信箱資訊"
+                  class="form-control" formControlName="email">
               </div>
-              <div class="form-group">
-                  <label for="stdNo" class="label-title">學號 <small>(必填)</small></label>
-                  <input type="text" [value]="stdNo" formControlName="stdNo" id="stdNo" placeholder="請輸入您的學號" class="form-control" />
-                </div>
               <div class="form-group">
                 <label for="name" class="label-title">您的姓名 <small>(必填)</small></label>
                 <input type="text" formControlName="name" placeholder="請輸入您的姓名" class="form-control" />
@@ -53,7 +50,7 @@
               <div class="form-group">
                 <label for="depart" class="label-title">科系/所 <small>(必填)</small></label>
                 <select name="" id="depart" class="form-control" formControlName="depart">
-                    <option *ngFor="let item of departments" value="{{item.unit}}">{{ item.unit}}</option>
+                  <option *ngFor="let item of departments" value="{{item.unit}}">{{ item.unit}}</option>
                 </select>
               </div>
               <div class="form-group">
@@ -74,11 +71,12 @@
                 </div>
               </div>
               <div class="form-group">
-                  <label for="select_class" class="label-title">欲報名之課程名稱 <small>(必填)</small></label>
-                  <select  (change)="setClass($event.target.value)" name="" id="select_class" class="form-control" formControlName="select_class">
-                      <option *ngFor="let item of tibameClass" value="{{item.title}}">{{ item.title}}</option>
-                  </select>
-                </div>
+                <label for="select_class" class="label-title">欲報名之課程名稱 <small>(必填)</small></label>
+                <select (change)="setClass($event.target.value)" name="" id="select_class" class="form-control"
+                  formControlName="select_class">
+                  <option *ngFor="let item of tibameClass" value="{{item.title}}">{{ item.title}}</option>
+                </select>
+              </div>
               <div class="form-group user-birthday" *ngIf="selectedClass">
                 <div class="label-title">課程開課梯次</div>
                 <div class="form-inline">
@@ -88,8 +86,8 @@
                 </div>
               </div>
               <div class="buttons text-center">
-                  <input type="submit" value="送出" class="btn btn-danger btn-lg">
-                  <input type="reset" value="取消" class="btn btn-default btn-lg">
+                <input type="submit" value="送出" class="btn btn-danger btn-lg">
+                <input type="reset" value="取消" class="btn btn-default btn-lg">
               </div>
             </div>
           </div>

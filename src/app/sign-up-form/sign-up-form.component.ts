@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@angular/forms';
 import { Tibame, departs } from './tibame-model';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Subject } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'ntub-sign-up-form',
@@ -10,6 +12,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./sign-up-form.component.scss']
 })
 export class SignUpFormComponent implements OnInit {
+
+  tapAction$ = new Subject<boolean>();
 
   constructor(private fb: FormBuilder, private http: HttpClient, private spinner: NgxSpinnerService) {
     this.departments = departs;
@@ -22,7 +26,6 @@ export class SignUpFormComponent implements OnInit {
 
   departments;
   email = '';
-  stdNo = '';
 
   radioOptions = [
     '大一',
@@ -39,7 +42,6 @@ export class SignUpFormComponent implements OnInit {
     name: 'entry.245711150',
     phone: 'entry.1225130926',
     email: 'emailAddress',
-    stdNo: 'entry.1678416040',
     depart: 'entry.1337474422',
     id: 'entry.1517481286',
     select_class: 'entry.1303094566',
@@ -51,7 +53,6 @@ export class SignUpFormComponent implements OnInit {
     name: ['', Validators.required],
     phone: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    stdNo: ['', Validators.required],
     depart: ['', Validators.required],
     id: ['', Validators.required],
     select_class: ['', Validators.required],
@@ -63,6 +64,7 @@ export class SignUpFormComponent implements OnInit {
     this.http.get(tibameURL).subscribe(
       data => {
         this.tibameClass = data as [Tibame];
+        this.handleRx();
         this.spinner.hide();
       },
       error => {
@@ -74,10 +76,8 @@ export class SignUpFormComponent implements OnInit {
   onEmailChange(email: string) {
     const text = email.split('@ntub.edu.tw').map(txt => txt.split('@')[0]).join('');
     this.email = email;
-    this.stdNo = text.split('@')[0];
     this.formData.patchValue({
-      email: this.email,
-      stdNo: this.stdNo
+      email: this.email
     });
   }
 
@@ -100,21 +100,39 @@ export class SignUpFormComponent implements OnInit {
   }
 
   save() {
-    if (this.formData.valid) {
-      const rawValue = this.formData.getRawValue();
-      let body = new HttpParams();
-      Object.entries(rawValue).forEach(([key, value]) => {
-        body = body.append(this.fieldMapping[key], value as string);
-      });
-      body = body.append(this.fieldMapping['time'], this.selectedClass.time);
-      const httpOptions = {
-        headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })
-      };
-      this.http.post(this.url, body, httpOptions).subscribe(() => {}, (err) => {});
-      alert('報名成功');
-    } else {
-      alert('欄位漏填！');
-    }
+    this.tapAction$.next(true);
+  }
+
+  handleRx() {
+    this.tapAction$.pipe(
+      filter(v => v),
+      debounceTime(300),
+    ).subscribe( _ => {
+      if (this.formData.valid) {
+        const rawValue = this.formData.getRawValue();
+        let body = new HttpParams();
+        Object.entries(rawValue).forEach(([key, value]) => {
+          if (value === '其他') {
+            body = body.append(this.fieldMapping[key], '__other_option__');
+          } else {
+            body = body.append(this.fieldMapping[key], value as string);
+          }
+        });
+        body = body.append(this.fieldMapping['time'], this.selectedClass.time);
+        const headers = new HttpHeaders();
+        headers
+        .set('Content-Type', 'application/x-www-form-urlencoded');
+        const httpOptions = {
+          headers: headers
+        };
+        this.http.post(this.url, body, httpOptions).subscribe(data => {}, (err) => {});
+        this.formData.reset();
+        alert('報名成功');
+        window.location.href = 'https://www.tibame.com/offline';
+      } else {
+        alert('欄位漏填！');
+      }
+    });
   }
 
 }
